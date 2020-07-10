@@ -1,6 +1,18 @@
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
 
+#adding my imports
+#import pandas as pd 
+import csv
+
+class City:
+  def __init__(self, name, lat, lon):
+    self.name = name
+    self.lat = lat
+    self.lon = lon
+
+  def __str__(self):
+    return f"{self.name}, {self.lat}, {self.lon}"
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -20,15 +32,29 @@ def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
-    
-    return cities
+
+  #load up the dataframe using pandas
+  df = pd.read_csv("src/cityreader/cities.csv")
+
+  #Drop columns that are unneeded.
+  df.drop(["state_name", "county_name", "population", "density", "timezone", "zips"],
+  axis=1,
+  inplace=True,
+  )
+
+  #append the city name lat and long
+  for city, lat, lon in df.itertuples(index=False):
+    city = City(city, lat, lon)
+    cities.append(city) 
+
+  return cities
 
 cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
 for c in cities:
     print(c)
-
+print()
 # STRETCH GOAL!
 #
 # Allow the user to input two points, each specified by latitude and longitude.
